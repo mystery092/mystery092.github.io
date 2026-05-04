@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marwan Djebali — Portfolio BTS SIO SLAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #1e1e2e;
+      --accent: #6ee7b7;
+      --accent2: #818cf8;
+      --accent3: #fb923c;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(110,231,183,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110,231,183,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(110,231,183,0.08) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .hero-glow2 {
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(129,140,248,0.06) 0%, transparent 70%);
+      bottom: 0; left: 200px;
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; max-width: 800px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(110,231,183,0.08);
+      border: 1px solid rgba(110,231,183,0.2);
+      border-radius: 2px;
+      padding: 0.35rem 0.9rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero h1 .name-line {
+      display: block;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h1 .role-line {
+      display: block;
+      color: var(--muted);
+      font-size: 0.45em;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-top: 0.5rem;
+      -webkit-text-fill-color: var(--muted);
+    }
+
+    .hero-desc {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .tag.python { border-color: rgba(251,146,60,0.4); color: var(--accent3); }
+    .tag.sysadmin { border-color: rgba(129,140,248,0.4); color: var(--accent2); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.4;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+
+    /* PROJET CARDS */
+    .projects-grid {
+      display: grid;
+      gap: 2px;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .project-card:hover { border-color: rgba(110,231,183,0.3); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover::before { transform: scaleY(1); }
+
+    .project-card.mairie::before { background: var(--accent2); }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .project-org {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-card.mairie .project-org { color: var(--accent2); }
+
+    .project-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .project-date {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .project-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .project-body { grid-template-columns: 1fr; }
+    }
+
+    .project-section-title {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #94a3b8;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tech-pill {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      background: rgba(110,231,183,0.07);
+      border: 1px solid rgba(110,231,183,0.15);
+      border-radius: 2px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .project-card.mairie .tech-pill {
+      background: rgba(129,140,248,0.07);
+      border-color: rgba(129,140,248,0.15);
+      color: var(--accent2);
+    }
+
+    .mission-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .mission-list li {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .mission-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+
+    .project-card.mairie .mission-list li::before { color: var(--accent2); }
+
+    /* COMPETENCES */
+    .competences-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .competences-table th {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .competences-table td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(30,30,46,0.8);
+      vertical-align: top;
+      color: #94a3b8;
+    }
+
+    .competences-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .comp-code {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .comp-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    .comp-dot.mairie { background: var(--accent2); }
+    .comp-dot.both { background: var(--accent3); }
+
+    /* VEILLE */
+    .veille-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+    }
+
+    .veille-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      transition: border-color 0.3s;
+    }
+
+    .veille-card:hover { border-color: rgba(251,146,60,0.3); }
+
+    .veille-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .veille-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .veille-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--accent); }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 3rem;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">MD // Portfolio</div>
+    <ul class="nav-links">
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#veille">Veille</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-content">
+      <div class="hero-badge">BTS SIO — Session 2026</div>
+      <h1>
+        <span class="name-line">Marwan Djebali</span>
+        <span class="role-line">Développeur — Option SLAM · Candidat individuel · Isère</span>
+      </h1>
+      <p class="hero-desc">
+        Étudiant en BTS Services Informatiques aux Organisations, option Solutions Logicielles et Applications Métiers.<br/>
+        Passionné par le développement Python et l'administration système open source.
+      </p>
+      <div class="hero-tags">
+        <span class="tag python">Python</span>
+        <span class="tag python">Tkinter</span>
+        <span class="tag python">OpenCV</span>
+        <span class="tag python">NumPy</span>
+        <span class="tag python">Pandas</span>
+        <span class="tag sysadmin">Nextcloud</span>
+        <span class="tag sysadmin">Linux</span>
+        <span class="tag sysadmin">Open Source</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- PROJETS -->
+  <section id="projets">
+    <div class="section-label reveal">Expériences professionnelles</div>
+    <h2 class="section-title reveal">Projets réalisés</h2>
+
+    <div class="projects-grid">
+
+      <!-- CEA -->
+      <div class="project-card reveal">
+        <div class="project-header">
+          <div>
+            <div class="project-org">CEA — Commissariat à l'Énergie Atomique</div>
+            <div class="project-title">Outil de labellisation de données quantiques</div>
+          </div>
+          <div class="project-date">Stage 1ère année — 2024</div>
+        </div>
+        <div class="project-body">
+          <div>
+            <div class="project-section-title">Contexte & Objectif</div>
+            <p class="project-desc">
+              Dans le cadre de recherches sur l'informatique quantique, les ingénieurs du CEA travaillent sur des qubits — électrons piégés dans des boîtes quantiques. Pour entraîner des modèles de détection, ils avaient besoin d'un outil permettant d'annoter manuellement des milliers d'images de données expérimentales.<br/><br/>
+              Ma mission : concevoir et développer de A à Z une application de labellisation en Python, ergonomique, robuste et extensible.
+            </p>
+          </div>
+          <div>
+            <div class="project-section-title">Réalisations</div>
+            <ul class="mission-list">
+              <li>Développement d'une interface graphique complète avec Tkinter (fenêtre 1500×900, menus, panneaux)</li>
+              <li>Système d'annotation par tracé de lignes, polylignes et points SAM sur images H5</li>
+              <li>Intégration d'un modèle YOLO pour la détection automatique et d'un modèle SAM pour la segmentation</li>
+              <li>Architecture plugin pour la gestion de plusieurs modèles d'IA simultanément</li>
+              <li>Gestion de versions des annotations avec historique par utilisateur</li>
+              <li>Export et import de datasets au format CSV / HDF5</li>
+              <li>Multi-threading pour les prédictions SAM en arrière-plan</li>
+              <li>Système d'undo/redo avec pile d'historique</li>
+            </ul>
+          </div>
+          <div>
+            <div class="project-section-title">Technologies utilisées</div>
+            <div class="tech-list">
+              <span class="tech-pill">Python 3</span>
+              <span class="tech-pill">Tkinter</span>
+              <span class="tech-pill">OpenCV</span>
+              <span class="tech-pill">NumPy</span>
+              <span class="tech-pill">Pandas</span>
+              <span class="tech-pill">PIL / Pillow</span>
+              <span class="tech-pill">Matplotlib</span>
+              <span class="tech-pill">scikit-image</span>
+              <span class="tech-pill">h5py</span>
+              <span class="tech-pill">YOLO</span>
+              <span class="tech-pill">SAM</span>
+              <span class="tech-pill">Threading</span>
+            </div>
+          </div>
+          <div>
+            <div class="project-section-title">Compétences couvertes</div>
+            <ul class="mission-list">
+              <li>Concevoir et développer une solution applicative (B1.3)</li>
+              <li>Répondre aux besoins métier des utilisateurs (B1.1)</li>
+              <li>Gérer les composants d'une interface (B1.2)</li>
+              <li>Organiser son environnement de développement (B1.4)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIRIE -->
+      <div class="project-card mairie reveal">
+        <div class="project-header">
+          <div>
+            <div class="project-org">Mairie d'Échirolles — DSI</div>
+            <div class="project-title">Déploiement Nextcloud & Support AlpOSS</div>
+          </div>
+          <div class="project-date">Stage 2ème année — 2025</div>
+        </div>
+        <div class="project-body">
+          <div>
+            <div class="project-section-title">Contexte & Objectif</div>
+            <p class="project-desc">
+              Au sein de la Direction des Systèmes d'Information de la mairie d'Échirolles, j'ai intégré l'équipe sous la supervision directe du directeur. La DSI gérait la transition vers des solutions open source souveraines.<br/><br/>
+              Deux missions principales : le déploiement d'une solution de travail collaboratif (Nextcloud), et la participation à l'organisation de l'événement régional AlpOSS dédié à l'écosystème open source.
+            </p>
+          </div>
+          <div>
+            <div class="project-section-title">Réalisations</div>
+            <ul class="mission-list">
+              <li>Installation et configuration de Nextcloud sur serveur Linux</li>
+              <li>Installation du module Collectives pour la gestion documentaire collaborative</li>
+              <li>Paramétrage des droits d'accès et des groupes d'utilisateurs</li>
+              <li>Participation à l'événement AlpOSS : mise en place de l'infrastructure de streaming</li>
+              <li>Configuration et test du système de diffusion vidéo en direct</li>
+              <li>Support technique pendant l'événement auprès des intervenants</li>
+            </ul>
+          </div>
+          <div>
+            <div class="project-section-title">Technologies utilisées</div>
+            <div class="tech-list">
+              <span class="tech-pill">Nextcloud</span>
+              <span class="tech-pill">Linux</span>
+              <span class="tech-pill">Administration système</span>
+              <span class="tech-pill">Gestion des droits</span>
+              <span class="tech-pill">Streaming vidéo</span>
+              <span class="tech-pill">Open Source</span>
+            </div>
+          </div>
+          <div>
+            <div class="project-section-title">Compétences couvertes</div>
+            <ul class="mission-list">
+              <li>Exploiter et administrer un service de travail collaboratif (B2.3)</li>
+              <li>Assurer la sécurité des accès et des données (B2.2)</li>
+              <li>Mettre en place et superviser des services réseaux (B2.1)</li>
+              <li>Travailler en mode projet (transversale)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- COMPETENCES -->
+  <section id="competences">
+    <div class="section-label reveal">Référentiel BTS SIO SLAM</div>
+    <h2 class="section-title reveal">Tableau de synthèse des compétences</h2>
+
+    <div class="reveal">
+      <table class="competences-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Compétence</th>
+            <th>CEA</th>
+            <th>Mairie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="comp-code">B1.1</span></td>
+            <td>Gérer le patrimoine informatique</td>
+            <td><span class="comp-dot"></span></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B1.2</span></td>
+            <td>Répondre aux incidents et demandes d'assistance</td>
+            <td></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B1.3</span></td>
+            <td>Développer la présence en ligne de l'organisation</td>
+            <td><span class="comp-dot"></span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B1.4</span></td>
+            <td>Travailler en mode projet</td>
+            <td><span class="comp-dot"></span></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B1.5</span></td>
+            <td>Mettre à disposition des utilisateurs un service informatique</td>
+            <td><span class="comp-dot"></span></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B1.6</span></td>
+            <td>Organiser son développement professionnel</td>
+            <td><span class="comp-dot"></span></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B2.1</span></td>
+            <td>Concevoir et développer une solution applicative</td>
+            <td><span class="comp-dot both"></span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B2.2</span></td>
+            <td>Assurer la maintenance corrective ou évolutive d'une solution applicative</td>
+            <td><span class="comp-dot"></span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><span class="comp-code">B2.3</span></td>
+            <td>Gérer les données</td>
+            <td><span class="comp-dot both"></span></td>
+            <td><span class="comp-dot mairie"></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-family: var(--mono); font-size: 0.65rem; color: var(--muted); margin-top: 1rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+        <span><span class="comp-dot" style="display:inline-block"></span> CEA</span>
+        <span><span class="comp-dot mairie" style="display:inline-block"></span> Mairie d'Échirolles</span>
+        <span><span class="comp-dot both" style="display:inline-block"></span> Les deux</span>
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- VEILLE TECHNOLOGIQUE -->
+  <section id="veille">
+    <div class="section-label reveal">Curiosité & apprentissage continu</div>
+    <h2 class="section-title reveal">Veille technologique</h2>
+
+    <div class="veille-grid">
+      <div class="veille-card reveal">
+        <div class="veille-icon">🤖</div>
+        <div class="veille-title">Intelligence Artificielle & Machine Learning</div>
+        <p class="veille-desc">
+          Suivi des avancées en vision par ordinateur (YOLO, SAM), des LLMs et de leur intégration dans les applications métier. Pratique directe lors du stage au CEA avec intégration de modèles de détection.
+        </p>
+      </div>
+      <div class="veille-card reveal">
+        <div class="veille-icon">🐧</div>
+        <div class="veille-title">Open Source & Linux</div>
+        <p class="veille-desc">
+          Veille sur l'écosystème open source, les distributions Linux, les solutions collaboratives souveraines (Nextcloud, Framasoft). Participation à AlpOSS, événement régional de l'open source.
+        </p>
+      </div>
+      <div class="veille-card reveal">
+        <div class="veille-icon">🐍</div>
+        <div class="veille-title">Développement Python</div>
+        <p class="veille-desc">
+          Suivi des évolutions du langage Python, des nouvelles librairies de data science et de traitement d'image. Pratique régulière via projets personnels et professionnels.
+        </p>
+      </div>
+      <div class="veille-card reveal">
+        <div class="veille-icon">⚛️</div>
+        <div class="veille-title">Informatique Quantique</div>
+        <p class="veille-desc">
+          Découverte du domaine lors du stage au CEA. Veille sur les avancées des qubits, des ordinateurs quantiques et des outils de simulation comme Qiskit.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 <span>Marwan Djebali</span> — BTS SIO SLAM Session 2026</p>
+    <p>Rectorat de Grenoble · Candidat n° <span>02248185545</span></p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
+
+</body>
+</html>
